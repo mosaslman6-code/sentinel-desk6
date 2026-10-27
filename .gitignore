@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.lab_webhook_token
+notification-config.bat
+notification-config.sh
+backups/
+certs/
+target_requests.db
+attack_lab/target_requests.db

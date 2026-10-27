@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SentinelDesk</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2318293d'/%3E%3Cpath d='M16 5.500l8.500 3v7.500c0 5-3.600 8.600-8.500 10.500C11.100 24.600 7.500 21 7.500 16V8.500z' fill='none' stroke='%237391ff' stroke-width='2'/%3E%3Cpath d='M11.500 16.200l3 3 6-6.700' fill='none' stroke='%237391ff' stroke-width='2.200' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section id="login" hidden>
+  <div class="lbrand">
+    <div class="logo"><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#18293d"/><path d="M16 5.500l8.500 3v7.500c0 5-3.600 8.600-8.500 10.500C11.100 24.600 7.500 21 7.500 16V8.500z" fill="none" stroke="#7391ff" stroke-width="2"/><path d="M11.500 16.200l3 3 6-6.700" fill="none" stroke="#7391ff" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></svg>SentinelDesk</div>
+    <div>
+      <h1 data-i18n="Every incident, one clear record.">Every incident, one clear record.</h1>
+      <p style="margin-top:18px" data-i18n="Report, triage and close security incidents against response targets, with evidence, indicators and a full audit trail behind every action.">Report, triage and close security incidents against response targets, with evidence, indicators and a full audit trail behind every action.</p>
+    </div>
+    <div class="lfacts">
+      <div><b>4</b><span data-i18n="severity levels with response targets">severity levels with response targets</span></div>
+      <div><b>14</b><span data-i18n="MITRE ATT&CK tactics tracked">MITRE ATT&amp;CK tactics tracked</span></div>
+      <div><b>SHA-256</b><span data-i18n="integrity-checked evidence">integrity-checked evidence</span></div>
+    </div>
+  </div>
+  <div class="lform">
+    <div class="tools-top"><button type="button" class="btn ghost icon langBtn" data-i18n-title="Language"><span id="langLbl">ع</span></button><button type="button" class="btn ghost icon themeBtn" data-i18n-title="Theme"></button></div>
+    <form id="lf" autocomplete="on">
+      <h2 data-i18n="Sign in">Sign in</h2>
+      <p class="mut" style="margin:0 0 22px" data-i18n="Use the account provided by your administrator.">Use the account provided by your administrator.</p>
+      <div class="fld"><label for="lu" data-i18n="Username">Username</label><input id="lu" autocomplete="username" required autofocus></div>
+      <div class="fld"><label for="lp" data-i18n="Password">Password</label><input id="lp" type="password" autocomplete="current-password" required></div>
+      <div class="fld" id="mfaRow" hidden><label for="lc" data-i18n="Authentication code">Authentication code</label><input id="lc" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456" style="direction:ltr;letter-spacing:.2em"></div>
+      <p class="err" id="lerr" role="alert"></p>
+      <button class="btn pri" style="width:100%;padding:10px" data-i18n="Sign in">Sign in</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div id="app" hidden>
+  <aside>
+    <div class="logo"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#18293d"/><path d="M16 5.500l8.500 3v7.500c0 5-3.600 8.600-8.500 10.500C11.100 24.600 7.500 21 7.500 16V8.500z" fill="none" stroke="#7391ff" stroke-width="2"/><path d="M11.500 16.200l3 3 6-6.700" fill="none" stroke="#7391ff" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/></svg>SentinelDesk</div>
+    <nav id="nav" aria-label="Main"></nav>
+    <div class="me">
+      <b id="meName"></b><span class="role" id="meRole"></span>
+      <div class="row"><button id="bAcct" data-i18n="Account">Account</button><button id="bOut" data-i18n="Sign out">Sign out</button></div>
+      <div class="ver" id="ver"></div>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="bar">
+      <button class="btn ghost icon menu" id="menuBtn" data-i18n-title="Menu"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button class="finder" id="finder" type="button"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.500-3.500"/></svg><span data-i18n="Search incidents, indicators, assets">Search incidents, indicators, assets</span><kbd>Ctrl K</kbd></button>
+      <span class="sp"></span>
+      <button class="btn ghost icon langBtn" type="button" data-i18n-title="Language"><span id="langLbl2" class="mono" style="font-weight:700"></span></button>
+      <button class="btn ghost icon themeBtn" type="button" data-i18n-title="Theme"></button>
+      <span class="bell" style="position:relative"><button class="btn ghost icon" id="bellBtn" type="button" data-i18n-title="Alerts"><svg class="ico" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0112 0c0 6 2.500 7.500 2.500 7.500h-17S6 15 6 9zM10 20a2 2 0 004 0"/></svg></button><i id="bellN" hidden></i><div class="pop" id="bellPop" hidden></div></span>
+    </div>
+    <header class="top"><div><h1 id="pgT"></h1><div class="sub" id="pgS"></div></div><div class="acts" id="pgA"></div></header>
+    <main id="view"></main>
+  </div>
+</div>
+
+<!-- ============ DIALOGS ============ -->
+<datalist id="assetList"></datalist>
+<dialog id="dImport"><form method="dialog" id="fImport">
+  <div class="dh"><h2 data-i18n="Import incidents from CSV">Import incidents from CSV</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <p class="mut sm" data-i18n="Required columns: title, category, severity, asset. Optional: description, source, assignee, tlp, created_at. Rows that repeat an existing title and asset are skipped.">Required columns: title, category, severity, asset. Optional: description, source, assignee, tlp, created_at. Rows that repeat an existing title and asset are skipped.</p>
+    <p><a class="btn sm" href="/api/incidents/import-template.csv" data-i18n="Download template">Download template</a></p>
+    <div class="fld"><label for="iFile" data-i18n="CSV file">CSV file</label><input type="file" id="iFile" accept=".csv,text/csv"></div>
+    <div id="iOut" class="sm" aria-live="polite"></div><p class="err" id="iErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button type="button" class="btn pri" id="iGo" disabled data-i18n="Import">Import</button></div>
+</form></dialog>
+
+<dialog id="dToken"><form method="dialog" id="fToken">
+  <div class="dh"><h2 data-i18n="Create API token">Create API token</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="fld"><label for="tName" data-i18n="Token name">Token name</label><input id="tName" required maxlength="60" autocomplete="off" placeholder="e.g. SIEM export script"></div>
+    <div class="g2">
+      <div class="fld"><label for="tScope" data-i18n="Access">Access</label><select id="tScope"><option value="read" data-i18n="Read only">Read only</option><option value="write" data-i18n="Read and write">Read and write</option></select></div>
+      <div class="fld"><label for="tDays" data-i18n="Expires after">Expires after</label><select id="tDays"><option value="30">30</option><option value="90" selected>90</option><option value="180">180</option><option value="365">365</option></select></div>
+    </div>
+    <p class="mut sm" data-i18n="A token acts as you with at most analyst rights. It cannot manage users, passwords or other tokens.">A token acts as you with at most analyst rights. It cannot manage users, passwords or other tokens.</p><p class="err" id="tErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Create token">Create token</button></div>
+</form></dialog>
+
+<dialog id="dTokenShow"><div>
+  <div class="dh"><h2 data-i18n="Your new API token">Your new API token</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <p><b data-i18n="Copy it now. It is shown only once and cannot be recovered.">Copy it now. It is shown only once and cannot be recovered.</b></p>
+    <div class="secret" id="tokVal" dir="ltr" style="user-select:all;overflow-wrap:anywhere"></div>
+  </div>
+  <div class="df"><button type="button" class="btn" id="tokCopy" data-i18n="Copy">Copy</button><button type="button" class="btn pri" data-close data-i18n="Done">Done</button></div>
+</div></dialog>
+
+<dialog id="dAsset"><form method="dialog" id="fAsset">
+  <div class="dh"><h2 id="aT" data-i18n="Add asset">Add asset</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="g2">
+      <div class="fld"><label for="aName" data-i18n="Asset name">Asset name</label><input id="aName" required maxlength="80" autocomplete="off"></div>
+      <div class="fld"><label for="aType" data-i18n="Type">Type</label><select id="aType"></select></div>
+      <div class="fld"><label for="aCrit" data-i18n="Criticality">Criticality</label><select id="aCrit"></select></div>
+      <div class="fld"><label for="aOwner" data-i18n="Owner">Owner</label><input id="aOwner" maxlength="200" autocomplete="off"></div>
+      <div class="fld"><label for="aDept" data-i18n="Department">Department</label><input id="aDept" maxlength="200" autocomplete="off"></div>
+      <div class="fld"><label for="aAddr" data-i18n="Address / IP">Address / IP</label><input id="aAddr" maxlength="200" autocomplete="off" dir="ltr"></div>
+    </div>
+    <div class="fld"><label for="aNotes" data-i18n="Notes">Notes</label><textarea id="aNotes" maxlength="1000"></textarea></div>
+    <p class="mut sm" data-i18n="Risk = incident severity × asset criticality (0-100).">Risk = incident severity × asset criticality (0-100).</p><p class="err" id="aErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Save">Save</button></div>
+</form></dialog>
+
+<dialog id="dNew"><form method="dialog" id="fNew">
+  <div class="dh"><h2 data-i18n="Report an incident">Report an incident</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="fld"><label for="nTpl" data-i18n="Quick template">Quick template</label><select id="nTpl"></select></div>
+    <div class="fld"><label for="nTitle" data-i18n="Title">Title</label><input id="nTitle" maxlength="120" required data-i18n-ph="Short summary of what happened" placeholder="Short summary of what happened"></div>
+    <div class="fld"><label for="nDesc" data-i18n="Description">Description</label><textarea id="nDesc" required data-i18n-ph="What was observed, when, and what has been done so far" placeholder="What was observed, when, and what has been done so far"></textarea></div>
+    <div class="g2">
+      <div class="fld"><label for="nCat" data-i18n="Category">Category</label><select id="nCat"></select></div>
+      <div class="fld"><label for="nSev" data-i18n="Severity">Severity</label><select id="nSev"></select></div>
+      <div class="fld"><label for="nAsset" data-i18n="Affected asset">Affected asset</label><input id="nAsset" required list="assetList" autocomplete="off" data-i18n-ph="e.g. HR-WS-07, mail server" placeholder="e.g. HR-WS-07, mail server"></div>
+      <div class="fld"><label for="nSrc" data-i18n="Detection source">Detection source</label><select id="nSrc"></select></div>
+      <div class="fld"><label for="nAsg" data-i18n="Assign to">Assign to</label><select id="nAsg"></select></div>
+      <div class="fld"><label for="nTlp" data-i18n="Sharing marking (TLP)">Sharing marking (TLP)</label><select id="nTlp"></select></div>
+    </div>
+    <div class="fld"><div class="lbl" data-i18n="MITRE ATT&CK tactics (optional)">MITRE ATT&amp;CK tactics (optional)</div><div class="chips" id="nMit"></div></div>
+    <p class="mut sm" id="nSla"></p><p class="err" id="nErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Report incident">Report incident</button></div>
+</form></dialog>
+
+<dialog id="dClose"><form method="dialog" id="fClose">
+  <div class="dh"><h2 data-i18n="Close incident">Close incident</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <p class="mut" style="margin-top:0" data-i18n="Closed incidents are locked. Summarise how the incident was resolved.">Closed incidents are locked. Summarise how the incident was resolved.</p>
+    <div class="fld"><label for="cNote" data-i18n="Closing summary">Closing summary</label><textarea id="cNote" required minlength="10" data-i18n-ph="Actions taken and the final outcome" placeholder="Actions taken and the final outcome"></textarea></div>
+    <div class="fld"><label for="cRoot" data-i18n="Root cause (optional)">Root cause (optional)</label><textarea id="cRoot" style="min-height:60px" data-i18n-ph="What allowed this to happen" placeholder="What allowed this to happen"></textarea></div>
+    <div class="fld"><label for="cLes" data-i18n="Lessons learned (optional)">Lessons learned (optional)</label><textarea id="cLes" style="min-height:60px" data-i18n-ph="What should change to prevent a repeat" placeholder="What should change to prevent a repeat"></textarea></div>
+    <p class="err" id="cErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Close incident">Close incident</button></div>
+</form></dialog>
+
+<dialog id="dEdit"><form method="dialog" id="fEdit">
+  <div class="dh"><h2 data-i18n="Edit details">Edit details</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="fld"><label for="eTitle" data-i18n="Title">Title</label><input id="eTitle" maxlength="120" required></div>
+    <div class="fld"><label for="eDesc" data-i18n="Description">Description</label><textarea id="eDesc" required></textarea></div>
+    <div class="fld"><label for="eAsset" data-i18n="Affected asset">Affected asset</label><input id="eAsset" required list="assetList" autocomplete="off"></div>
+    <p class="err" id="eErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Save changes">Save changes</button></div>
+</form></dialog>
+
+<dialog id="dCls"><form method="dialog" id="fCls">
+  <div class="dh"><h2 data-i18n="Classification">Classification</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="fld"><label for="kTlp" data-i18n="Sharing marking (TLP)">Sharing marking (TLP)</label><select id="kTlp"></select>
+      <div class="mut sm" style="margin-top:6px" data-i18n="TLP says how widely this incident may be shared: WHITE is public, GREEN is community, AMBER is limited to the organisation, RED is named recipients only.">TLP says how widely this incident may be shared: WHITE is public, GREEN is community, AMBER is limited to the organisation, RED is named recipients only.</div></div>
+    <div class="fld"><div class="lbl" data-i18n="MITRE ATT&CK tactics">MITRE ATT&amp;CK tactics</div><div class="chips" id="kMit"></div></div>
+    <p class="err" id="kErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Save changes">Save changes</button></div>
+</form></dialog>
+
+<dialog id="dUser"><form method="dialog" id="fUser">
+  <div class="dh"><h2 data-i18n="Add user">Add user</h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="g2">
+      <div class="fld"><label for="uName" data-i18n="Username">Username</label><input id="uName" required minlength="3" autocomplete="off"></div>
+      <div class="fld"><label for="uFull" data-i18n="Full name">Full name</label><input id="uFull" required autocomplete="off"></div>
+      <div class="fld"><label for="uMail" data-i18n="Email (optional)">Email (optional)</label><input id="uMail" type="email" autocomplete="off"></div>
+      <div class="fld"><label for="uRole" data-i18n="Role">Role</label><select id="uRole"><option value="analyst" data-i18n="Analyst">Analyst</option><option value="viewer" data-i18n="Viewer">Viewer</option><option value="admin" data-i18n="Administrator">Administrator</option></select></div>
+    </div>
+    <div class="fld"><label for="uPw" data-i18n="Temporary password">Temporary password</label><input id="uPw" type="password" required autocomplete="new-password"><div class="mut sm" data-i18n="At least 8 characters, with letters and numbers.">At least 8 characters, with letters and numbers.</div></div>
+    <p class="err" id="uErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Add user">Add user</button></div>
+</form></dialog>
+
+<dialog id="dPw"><form method="dialog" id="fPw">
+  <div class="dh"><h2 id="pwT"></h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="fld" id="pwCurW"><label for="pwCur" data-i18n="Current password">Current password</label><input id="pwCur" type="password" autocomplete="current-password"></div>
+    <div class="fld"><label for="pwNew" data-i18n="New password">New password</label><input id="pwNew" type="password" required autocomplete="new-password"><div class="mut sm" data-i18n="At least 8 characters, with letters and numbers.">At least 8 characters, with letters and numbers.</div></div>
+    <p class="err" id="pwErr" role="alert"></p>
+  </div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Save password">Save password</button></div>
+</form></dialog>
+
+<dialog id="dRow" style="width:min(720px,94vw)"><form method="dialog" id="fRow">
+  <div class="dh"><h2 id="rowT"></h2><button type="button" class="x" data-close aria-label="Close">×</button></div>
+  <div class="db"><div id="rowF"></div><p class="err" id="rowE" role="alert"></p></div>
+  <div class="df"><button type="button" class="btn" data-close data-i18n="Cancel">Cancel</button><button class="btn pri" data-i18n="Save">Save</button></div>
+</form></dialog>
+
+<dialog id="pal" aria-label="Search">
+  <input id="palQ" type="search" autocomplete="off" data-i18n-ph="Search incidents, indicators, assets, or type a command" placeholder="Search incidents, indicators, assets, or type a command" aria-label="Search">
+  <div class="res" id="palRes"></div>
+  <div class="foot" data-i18n="Arrow keys to move, Enter to open, Esc to close">Arrow keys to move, Enter to open, Esc to close</div>
+</dialog>
+
+<div id="toasts" role="status" aria-live="polite"></div>
+
+<script src="/static/i18n.js"></script>
+<script src="/static/qr.js"></script>
+<script src="/static/core.js"></script>
+<script src="/static/views.js"></script>
+<script src="/static/admin.js"></script>
+<script src="/static/extras.js"></script>
+</body>
+</html>
